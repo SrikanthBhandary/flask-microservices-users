@@ -1,19 +1,27 @@
+import os
+
+
 class BaseConfig:
     DEBUG = False
     TESTING = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SECRET_KEY = 'my_precious'
 
 
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
 
 
 class TestingConfig(BaseConfig):
     DEBUG = True
-    TESTING = False
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_TEST_URL')
 
 
 class ProductionConfig(BaseConfig):
-    DEBUG = True
-    TESTING = False
+    DEBUG = False
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+
 
 

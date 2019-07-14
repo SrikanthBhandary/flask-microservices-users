@@ -2,9 +2,35 @@ import unittest
 from flask_script import Manager
 from project import create_app, db
 from project.api.models import User
+import coverage
+
+COV = coverage.coverage(
+    branch=True,
+    include='project/*',
+    omit=[
+        'project/tests/*'
+    ]
+)
+COV.start()
+
 
 app = create_app()
 manager = Manager(app)
+
+@manager.command
+def cov():
+    """Runs the unit tests with coverage."""
+    tests = unittest.TestLoader().discover('project/tests')
+    result = unittest.TextTestRunner(verbosity=2).run(tests)
+    if result.wasSuccessful():
+        COV.stop()
+        COV.save()
+        print('Coverage Summary:')
+        COV.report()
+        COV.html_report()
+        COV.erase()
+        return 0
+    return 1
 
 @manager.command
 def recreate_db():

@@ -11,3 +11,4 @@ Werkzeug==0.15.4
 Flask-SQLAlchemy==2.2
 psycopg2==2.7.1
 gunicorn==19.7.1
+coverage==4.4.1

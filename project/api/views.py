@@ -6,7 +6,6 @@ from sqlalchemy import exc
 
 users_blueprint = Blueprint('users', __name__, template_folder='./templates')
 
-
 @users_blueprint.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':

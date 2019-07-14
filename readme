@@ -1,0 +1,82 @@
+Aliases
+To save some precious keystrokes, let's create aliases for both the docker-compose and docker-machine commands - dc and dm, respectively.
+
+Simply add the following lines to your .bashrc file:
+
+alias dc='docker-compose'
+alias dm='docker-machine'
+Save the file, then execute it:
+
+$ source ~/.bashrc
+Test out the new aliases!
+
+On Windows? You will first need to create a PowerShell Profile (if you don't already have one), and then you can add the aliases to it using Set-Alias - i.e., Set-Alias dc docker-compose.
+
+"Saved" State
+Is the VM stuck in a "Saved" state?
+
+$ docker-machine ls
+
+NAME   ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER        ERRORS
+aws    *        amazonec2    Running   tcp://34.207.173.181:2376           v17.05.0-ce
+dev    -        virtualbox   Saved                                         Unknown
+To break out of this, you'll need to power off the VM:
+
+Start virtualbox - virtualbox
+Select the VM and click "start"
+Exit the VM and select "Power off the machine"
+Exit virtualbox
+The VM should now have a "Stopped" state:
+
+$ docker-machine ls
+
+NAME   ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER        ERRORS
+aws    *        amazonec2    Running   tcp://34.207.173.181:2376           v17.05.0-ce
+dev    -        virtualbox   Stopped                                       Unknown
+Now you can start the machine:
+
+$ docker-machine start dev
+It should be "Running":
+
+$ docker-machine ls
+
+NAME   ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER        ERRORS
+aws    *        amazonec2    Running   tcp://34.207.173.181:2376           v17.05.0-ce
+dev    -        virtualbox   Running   tcp://192.168.99.100:2376           v17.05.0-ce
+Common Commands
+Build the images:
+
+$ docker-compose build
+Run the containers:
+
+$ docker-compose up -d
+Create the database:
+
+$ docker-compose run users-service python manage.py recreate_db
+Seed the database:
+
+$ docker-compose run users-service python manage.py seed_db
+Run the tests:
+
+$ docker-compose run users-service python manage.py test
+Other commands
+To stop the containers:
+
+$ docker-compose stop
+To bring down the containers:
+
+$ docker-compose down
+Want to force a build?
+
+$ docker-compose build --no-cache
+Remove images:
+
+$ docker rmi $(docker images -q)
+Postgres
+Want to access the database via psql?
+
+$ docker exec -ti users-db psql -U postgres -W
+Then, you can connect to the database and run SQL queries. For example:
+
+# \c users_dev
+# select * from users;
